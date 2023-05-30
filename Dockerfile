@@ -9,7 +9,8 @@ RUN apt-get install -y --fix-missing \
     gfortran \
     git \
     wget \
-    curl \
+    curl
+RUN apt-get install -y --fix-missing \
     graphicsmagick \
     libgraphicsmagick1-dev \
     libatlas-base-dev \
@@ -41,12 +42,15 @@ RUN cd ~ && \
 #     pip3 install -r requirements.txt
 # RUN whatever_command_you_run_to_start_your_app
 
-COPY . /root/face_recognition
-RUN cd /root/face_recognition && \
-    pip3 install -r requirements.txt && \
+WORKDIR /root/face_recognition
+
+COPY ./face_recognition .
+RUN pip3 install -r requirements.txt && \
     python3 setup.py install
 
 # Add pip3 install opencv-python==4.1.2.30 if you want to run the live webcam examples
 
-CMD cd /root/face_recognition/examples && \
-    python3 recognize_faces_in_pictures.py
+RUN python3 recognize_faces_in_pictures.py
+
+ENTRYPOINT [ "face_recognition" ]
+CMD ["--help"]
